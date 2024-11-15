@@ -1,6 +1,5 @@
-import Container from "../layouts/Container";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { Key, useState, useTransition } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { UpdateProductSchema } from "../../schemas/product.schema";
 import FormField from "../ui/form-field";
@@ -25,6 +24,7 @@ export default function EditProductForm({ Product }: Props) {
   const [error, setError] = useState<string | undefined>(undefined);
   const [success, setSuccess] = useState<string | undefined>(undefined);
   const [isPending, setIsPending] = useState(false);
+  const [productImages, setProductImages] = useState(Product.images);
   const [imagePreviews, setImagePreviews] = useState<
     { src: string; file: File }[]
   >([]);
@@ -86,6 +86,7 @@ export default function EditProductForm({ Product }: Props) {
       );
       if (res.data) {
         setSuccess("Product successfully uploaded!");
+        window.location.reload();
         return;
       }
     } catch (error) {
@@ -162,6 +163,11 @@ export default function EditProductForm({ Product }: Props) {
   };
 
   const removeExistingImageFromForm = (indexToRemove: string) => {
+    setProductImages((prev: any) => {
+      return prev.filter(
+        (image: any, index: any) => image._id !== indexToRemove
+      );
+    });
     const currentDeletedImages =
       newProductForm.getValues("imageToBeDeleted") || [];
     const updatedDeletedImages = [...currentDeletedImages, indexToRemove];
@@ -282,7 +288,7 @@ export default function EditProductForm({ Product }: Props) {
       <FormField
         control={newProductForm.control}
         name="newImages"
-        render={({ field, fieldState }) => (
+        render={({ fieldState }) => (
           <FormItem>
             <div className="flex gap-10">
               <div className="">
@@ -296,7 +302,7 @@ export default function EditProductForm({ Product }: Props) {
 
               <div className="mt-3 flex gap-5 flex-wrap">
                 {Product.images.length > 0 &&
-                  Product.images.map((prw: any, index: number) => (
+                  productImages.map((prw: any, index: number) => (
                     <div
                       key={index}
                       className="relative w-[85px] aspect-square"
