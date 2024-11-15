@@ -83,7 +83,7 @@ export const toggleFavourite = createAsyncThunk<string, string>(
         }
       );
       if (response.status === 200) {
-        return id; // Return updated favorites if save is successful
+        return id;
       } else {
         return rejectWithValue("Failed to save favorites to the database");
       }
@@ -158,8 +158,6 @@ export const productSlice = createSlice({
         } else {
           state.favorites.push(favoriteId);
         }
-
-        // Save updated favorites to localStorage
         localStorage.setItem("favorites", JSON.stringify(state.favorites));
         state.loading = false;
       })
