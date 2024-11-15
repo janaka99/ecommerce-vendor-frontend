@@ -7,7 +7,7 @@ type Props = {};
 export default function NewProductPage({}: Props) {
   return (
     <Container className="py-10 flex flex-col gap-10 ">
-      <FormHeader text="Edit product" />
+      <FormHeader text="Add new product" />
       <NewProductForm />
     </Container>
   );
